@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystery SQL</title>
+
+    <!-- CSS externo -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Bibliotecas -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/sql/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1> Titulo bonito </h1>
+        <p>
+            But <a id="show-schema">click here</a> to show the schema diagram.
+        </p>
+            <img
+                id="experienced-schema"
+                src="https://www.sqlitetutorial.net/wp-content/uploads/2015/11/sqlite-sample-database-color.jpg"
+                width='1002'
+                height='491'
+            >
+        
+        <div class="sql-box">
+            <textarea class="sql-editor">SELECT * FROM playlists</textarea>
+
+            <div>
+                <button type="button" class="run-btn" disabled>Run ⇩</button>
+                <button type="button" class="clr-out"> Clear Output </button>
+                <button type="button" class="reset-btn">Reset</button>
+            </div>
+
+            <div class="result-table"></div>
+        </div>
+
+        <h1>Check your solution</h1>
+
+        <div class="sql-box">
+            <textarea class="sql-editor">INSERT INTO solution VALUES (1, 'Insert the name of the person you found here');
+SELECT value FROM solution;</textarea>
+            <div>
+                <button type="button" class="run-btn" disabled>Run ⇩</button>
+                <button type="button" class="clr-out"> Clear Output </button>
+                <button type="button" class="reset-btn">Reset</button>
+            </div>
+
+            <div class="result-table"></div>
+        </div>
+    </div>
+
+    <script src="scripts/script.js"></script>
+</body>
+</html>

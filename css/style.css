@@ -1,0 +1,93 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.container {
+    width: min(1100px, 100%);
+    margin: 0 auto;
+    padding-inline: clamp(12px, 4vw, 40px);
+    padding-top: 20px;
+}
+
+.sql-box {
+    margin-top: 20px;
+}
+
+.CodeMirror {
+    border: 1px solid #ccc;
+    background-color: #f5f8fa;
+    margin-bottom: 10px;
+    font-size: 16px;
+    width: 100%;
+    height: auto;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+button {
+    padding: 5px 15px;
+    margin-right: 5px;
+    cursor: pointer;
+    border: 1px solid #000;
+    border-radius: 4px;
+    background: white;
+}
+
+button:hover {
+    background-color: #eee;
+}
+
+/* datatable */
+.datatable {
+    border: solid 1px grey;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    font-size: 16px;
+}
+
+.datatable th {
+    text-align: left;
+    background-color: #d3d3d3;
+    color: #444;
+    font-weight: 600;
+    
+    border: solid 1px grey;
+    padding: 3px;
+}
+
+.datatable td {
+    vertical-align: middle;
+    color: #555;
+    font-weight: normal;
+    text-align: center;
+
+    border: solid 1px grey;
+    padding: 6px 8px;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+#experienced-schema {
+    display: none;
+}
+
+#experienced-schema.show {
+    display: block;
+}
