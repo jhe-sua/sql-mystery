@@ -1,0 +1,3 @@
+- Falta icone do site
+- Apresentar o desafio
+- deixar links clicaveis bonitos
