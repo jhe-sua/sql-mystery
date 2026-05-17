@@ -91,3 +91,8 @@ button:hover {
 #experienced-schema.show {
     display: block;
 }
+
+img {
+    width: 100%;
+    overflow-x: auto;
+}
