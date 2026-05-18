@@ -1,8 +1,28 @@
 body {
-    font-family: Arial, sans-serif;
     padding: 20px;
     margin: 0;
     box-sizing: border-box;
+}
+
+p {
+    font-family: 'Inter', sans-serif;
+
+    color: #323437;
+
+    font-size: 16px;
+    line-height: 1.7;
+
+    margin-bottom: 14px;
+}
+
+a {
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.25s ease;
+}
+
+a:hover {
+    color: #770088;
 }
 
 * {
@@ -86,13 +106,24 @@ button:hover {
 
 #experienced-schema {
     display: none;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-top: 15px;
 }
 
 #experienced-schema.show {
     display: block;
 }
 
-img {
-    width: 100%;
-    overflow-x: auto;
+#experienced-schema img {
+    display: block;
+    width: 1002px !important;
+    min-width: 1002px !important;
+    max-width: none !important;
+    height: auto !important;
+    flex: 0 0 auto;
 }
+
+/* Paragrafos */
+

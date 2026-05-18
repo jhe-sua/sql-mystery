@@ -5,12 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mystery SQL</title>
 
-    <!-- CSS externo -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="img/detetive5.png">
 
+
+    <!-- CSS externo -->
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <!-- Bibliotecas -->
     <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/sql/sql.min.js"></script>
@@ -19,17 +28,33 @@
 
 <body>
     <div class="container">
-
-        <h1> Titulo bonito </h1>
+        <h1>Investigadores SQL comecem aqui</h1>
         <p>
-            But <a id="show-schema">click here</a> to show the schema diagram.
+            Devido a suspeitas de pessoas adquirindo benefício sobre o nome de pessoas 
+            mortas, um novo portal foi feito. Sua tarefa é investigar casos de estelionato
+            majorado de alto valor (>R$7000). Para tanto, podemos suspeitar de indivíduos
+            com aumento de pelo menos R$7000 em renda declarada ou suspeitos de sonegação.<br>
+
+            O primeiro caso suspeito aconteceu na noite de ontem, quando uma locadora do site Airbnb
+            recebeu a solicitação de aluguel do seu imóvel, com o mesmo nome e dados pessoais de seu
+            falecido pai. Comece procurando por lá! O endereço do imóvel é Rua Cruz Lima nº 30,
+            Edifício Uruguai, Flamengo. <br>
+
+            Para ter certeza que alguém é culpado precisamos ter um certificado de óbito
+            e um saque posterior ao óbito
         </p>
-            <img
-                id="experienced-schema"
-                src="https://www.sqlitetutorial.net/wp-content/uploads/2015/11/sqlite-sample-database-color.jpg"
-                width='1002'
-                height='491'
-            >
+
+
+        <h1> O resto esta nas suas mãos </h1>
+        <p>
+            <a id="show-schema">clique aqui</a> para exibir o diagrama do esquema.
+        </p>
+        <div id="experienced-schema">
+                <img
+                    src="https://www.sqlitetutorial.net/wp-content/uploads/2015/11/sqlite-sample-database-color.jpg"
+                    alt="schema"
+                >
+        </div>
         
         <div class="sql-box">
             <textarea class="sql-editor">SELECT * FROM playlists</textarea>
@@ -43,7 +68,7 @@
             <div class="result-table"></div>
         </div>
 
-        <h1>Check your solution</h1>
+        <h1>Confira sua solução</h1>
 
         <div class="sql-box">
             <textarea class="sql-editor">INSERT INTO solution VALUES (1, 'Insert the name of the person you found here');

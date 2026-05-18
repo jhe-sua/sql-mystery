@@ -1,0 +1,205 @@
+Tabelas:
+
+usuarios_airbnb
+
+locacao_airbnb
+
+depoimentos
+
+conta_bancaria
+
+transacoes_bancarias
+
+declaracao_renda
+
+certificados_obito
+
+tabela_criptografada_identidades
+
+movimentos_suspeitos
+
+
+
+1. CONTROLE DE ACESSO (USUÁRIOS)
+
+CREATE USER investigador_comum WITH PASSWORD 'senha_investigador';
+CREATE USER investigador_autorizado WITH PASSWORD 'senha_autorizada';
+
+
+2. CRIAÇÃO DAS TABELAS (ORDEM LÓGICA)
+
+-- Tabela 1: Certificados de Óbito
+CREATE TABLE certificados_obito (
+    id_obito SERIAL PRIMARY KEY,
+    nome_falecido VARCHAR(200) NOT NULL,
+    cpf_falecido VARCHAR(14) UNIQUE NOT NULL,
+    data_obito DATE NOT NULL,
+    numero_certidao VARCHAR(50) UNIQUE NOT NULL
+);
+
+
+
+-- Tabela 2: Usuários do Airbnb (Pode conter vivos e dados de falecidos fraudados)
+CREATE TABLE usuarios_airbnb (
+    id_usuario SERIAL PRIMARY KEY,
+    nome VARCHAR(200) NOT NULL,
+    cpf VARCHAR(14) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    data_cadastro DATE NOT NULL,
+    senha_metodo VARCHAR(50) DEFAULT 'reconhecimento_facial' -- Para a pista de mudar para senha numérica
+);
+
+
+
+-- Tabela 3: Locações do Airbnb
+CREATE TABLE locacoes_airbnb (
+    id_locacao SERIAL PRIMARY KEY,
+    id_usuario INTEGER REFERENCES usuarios_airbnb(id_usuario),
+    endereco_imovel VARCHAR(255) NOT NULL,
+    bairro VARCHAR(100) NOT NULL,
+    data_inicio DATE NOT NULL,
+    data_fim DATE NOT NULL,
+    valor_total DECIMAL(10,2) NOT NULL
+);
+
+
+
+-- Tabela 4: Contas Bancárias
+CREATE TABLE contas_bancarias (
+    id_conta SERIAL PRIMARY KEY,
+    cpf_titular VARCHAR(14) NOT NULL,
+    banco VARCHAR(100) NOT NULL,
+    agencia VARCHAR(20) NOT NULL,
+    numero_conta VARCHAR(30) UNIQUE NOT NULL,
+    saldo_atual DECIMAL(12,2) NOT NULL
+);
+
+
+
+-- Tabela 5: Transações Bancárias
+CREATE TABLE transacoes_bancarias (
+    id_transacao SERIAL PRIMARY KEY,
+    id_conta INTEGER REFERENCES contas_bancarias(id_conta),
+    tipo_transacao VARCHAR(50) NOT NULL, -- 'SAQUE', 'DEPOSITO', 'PIX', 'TRANSFERENCIA'
+    valor DECIMAL(12,2) NOT NULL,
+    data_transacao TIMESTAMP NOT NULL,
+    codigo_autorizador_encriptografado VARCHAR(14) NOT NULL, -- Aponta para a tabela proibida
+    localizacao VARCHAR(255)
+);
+
+
+
+-- Tabela 6: Declaração de Renda
+CREATE TABLE declaracao_renda (
+    id_declaracao SERIAL PRIMARY KEY,
+    cpf VARCHAR(14) NOT NULL,
+    nome_declarante VARCHAR(200) NOT NULL,
+    ano_referencia INTEGER NOT NULL,
+    renda_declarada DECIMAL(12,2) NOT NULL,
+    renda_real_estimada DECIMAL(12,2), -- Usado para o jogador pegar a inconsistência/sonegação
+    bens_no_exterior BOOLEAN DEFAULT FALSE -- Para a Ideia 1 (imóveis fora por empréstimo)
+);
+
+
+
+-- Tabela 7: Depoimentos Oficiais da Investigação
+CREATE TABLE depoimentos (
+    id_depoimento SERIAL PRIMARY KEY,
+    nome_testemunha VARCHAR(200) NOT NULL,
+    papel_relacao VARCHAR(100) NOT NULL, -- 'filha', 'empregado', 'consultor'
+    email_contato VARCHAR(150), -- O consultor vai deixar o email do airbnb aqui!
+    texto_depoimento TEXT NOT NULL,
+    data_depoimento DATE NOT NULL
+);
+
+
+
+-- Tabela 8: Movimentações Suspeitas
+CREATE TABLE movimentos_suspeitos (
+    id_movimento SERIAL PRIMARY KEY,
+    cpf_envolvido VARCHAR(14),
+    descricao_fato TEXT NOT NULL,
+    data_registro DATE NOT NULL,
+    categoria VARCHAR(50) -- 'viagem_cara', 'fraude_facial', 'emprestimo_suspeito'
+);
+
+
+
+-- Tabela 9: TABELA CRIPTOGRAFADA (Acesso Proibido ao Investigador Comum)
+CREATE TABLE tabela_criptografada_identidades (
+    id_cripto SERIAL PRIMARY KEY,
+    codigo_autorizador_encriptografado VARCHAR(14) UNIQUE NOT NULL,
+    cpf_real VARCHAR(14) NOT NULL,
+    nome_real VARCHAR(200) NOT NULL,
+    data_nascimento DATE
+);
+
+
+
+-- Tabela 10: Mecanismo de Controle do Jogo (Gatilho de Autodestruição)
+CREATE TABLE controle_jogo (
+    chave VARCHAR(50) PRIMARY KEY,
+    valor_texto TEXT NOT NULL
+);
+
+
+-- Inicializa o estado do jogo
+INSERT INTO controle_jogo (chave, valor_texto) VALUES ('gatilho_apagar', 'MONITORANDO');
+
+
+
+
+3. DISTRIBUIÇÃO DE PERMISSÕES (SECURITY)
+
+-- Investigador Comum tem acesso a quase tudo, MENOS à tabela criptografada
+GRANT SELECT, INSERT, UPDATE ON 
+    certificados_obito, usuarios_airbnb, locacoes_airbnb, contas_bancarias, 
+    transacoes_bancarias, declaracao_renda, depoimentos, movimentos_suspeitos,
+    controle_jogo
+TO investigador_comum;
+
+-- Investigador Autorizado tem acesso à tabela proibida
+GRANT SELECT, INSERT, UPDATE ON tabela_criptografada_identidades TO investigador_autorizado;
+
+-- Garante explicitamente o bloqueio na tabela secreta para o comum
+REVOKE ALL ON tabela_criptografada_identidades FROM investigador_comum;
+
+
+
+
+4. FUNÇÃO E TRIGGER DE AUTODESTRUIÇÃO
+
+CREATE OR REPLACE FUNCTION apagar_banco_se_culpado_descoberto()
+RETURNS TRIGGER AS $$
+DECLARE
+    celula_controle TEXT;
+BEGIN
+    -- Verifica se a célula de controle (ex: 'verdadeiro_culpado' tem 'REVELADO')
+    SELECT valor_texto INTO celula_controle FROM controle_jogo WHERE chave = 'gatilho_apagar';
+    
+    IF celula_controle = 'REVELADO' THEN
+        TRUNCATE falecidos, contas_bancarias, saques, declaracao_renda, 
+                 suspeitos, movimentos_suspeitos RESTART IDENTITY CASCADE;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Gatilho que monitora mudanças na tabela controle_jogo
+CREATE TRIGGER vigilancia_revelacao
+AFTER UPDATE ON controle_jogo
+FOR EACH ROW
+WHEN (NEW.chave = 'gatilho_apagar' AND NEW.valor_texto = 'REVELADO')
+EXECUTE FUNCTION apagar_banco_se_culpado_descoberto();
+
+
+
+
+
+
+
+
+
+
+
