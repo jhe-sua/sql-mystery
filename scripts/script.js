@@ -139,7 +139,7 @@ function initSqlBoxes()
 }
 
 initSqlBoxes();
-loadDb("chinook.db");
+loadDb("data/banco_mistery_2.db");
 
 document.querySelector("#show-schema")
 .addEventListener("click", function (e) {

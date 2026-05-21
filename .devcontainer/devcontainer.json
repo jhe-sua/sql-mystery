@@ -1,8 +1,0 @@
-{
-  "name": "postgres-dev",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
-
-  "forwardPorts": [5432]
-}
